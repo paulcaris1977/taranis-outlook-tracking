@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Taranis Email Tracking</title>
+
+  <!-- Office.js - MUST be first -->
+  <script src="https://appsforoffice.microsoft.com/lib/1/hosted/office.js"></script>
+
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: "Segoe UI", -apple-system, sans-serif;
+      background: #f8fafc;
+      color: #1e293b;
+      padding: 16px;
+      font-size: 14px;
+    }
+
+    .header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid #e2e8f0;
+    }
+
+    .header-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: #1e293b;
+    }
+
+    .header-subtitle {
+      font-size: 11px;
+      color: #64748b;
+    }
+
+    /* Status badge */
+    .status-box {
+      border-radius: 8px;
+      padding: 10px 14px;
+      margin-bottom: 14px;
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .status-box.idle     { background: #f1f5f9; color: #475569; border: 1px solid #e2e8f0; }
+    .status-box.active   { background: #dcfce7; color: #166534; border: 1px solid #bbf7d0; }
+    .status-box.loading  { background: #eff6ff; color: #1e40af; border: 1px solid #bfdbfe; }
+    .status-box.error    { background: #fef2f2; color: #dc2626; border: 1px solid #fecaca; }
+
+    .dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .dot.green  { background: #22c55e; }
+    .dot.blue   { background: #3b82f6; animation: pulse 1s infinite; }
+    .dot.gray   { background: #94a3b8; }
+    .dot.red    { background: #ef4444; }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+
+    /* Info row */
+    .info-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 6px 0;
+      border-bottom: 1px solid #f1f5f9;
+      font-size: 12px;
+    }
+    .info-label { color: #64748b; }
+    .info-value { color: #1e293b; font-weight: 500; max-width: 160px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; text-align: right; }
+
+    /* Button */
+    .btn {
+      width: 100%;
+      padding: 10px;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 600;
+      margin-top: 14px;
+      transition: opacity 0.2s;
+    }
+    .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+    .btn-primary { background: #6366f1; color: white; }
+    .btn-primary:hover:not(:disabled) { background: #4f46e5; }
+    .btn-danger  { background: #ef4444; color: white; }
+    .btn-danger:hover:not(:disabled) { background: #dc2626; }
+    .btn-secondary { background: #e2e8f0; color: #475569; }
+    .btn-secondary:hover:not(:disabled) { background: #cbd5e1; }
+
+    .tracking-id-box {
+      background: #f1f5f9;
+      border-radius: 6px;
+      padding: 6px 10px;
+      font-size: 10px;
+      color: #64748b;
+      word-break: break-all;
+      margin-top: 10px;
+      font-family: monospace;
+    }
+
+    .footer {
+      margin-top: 16px;
+      font-size: 10px;
+      color: #94a3b8;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <div>
+      <div class="header-title">📧 Taranis Email Tracking</div>
+      <div class="header-subtitle">Track when your email is opened</div>
+    </div>
+  </div>
+
+  <!-- Status -->
+  <div id="statusBox" class="status-box idle">
+    <div class="dot gray" id="statusDot"></div>
+    <span id="statusText">Ready to track</span>
+  </div>
+
+  <!-- Info -->
+  <div id="infoSection" style="display:none; margin-bottom:14px;">
+    <div class="info-row">
+      <span class="info-label">To</span>
+      <span class="info-value" id="infoRecipient">-</span>
+    </div>
+    <div class="info-row">
+      <span class="info-label">Subject</span>
+      <span class="info-value" id="infoSubject">-</span>
+    </div>
+    <div class="info-row">
+      <span class="info-label">Status</span>
+      <span class="info-value" id="infoStatus">-</span>
+    </div>
+    <div class="tracking-id-box" id="infoTrackingId"></div>
+  </div>
+
+  <!-- Buttons -->
+  <button id="btnTrack" class="btn btn-primary" onclick="addTracking()">
+    🎯 Track this email
+  </button>
+
+  <button id="btnRemove" class="btn btn-danger" onclick="removeTracking()" style="display:none;">
+    ✕ Remove tracking
+  </button>
+
+  <button id="btnDashboard" class="btn btn-secondary" onclick="openDashboard()">
+    📊 Open Dashboard
+  </button>
+
+  <div class="footer">Taranis Cooperage Group · v1.0.0</div>
+
+  <script src="taskpane.js"></script>
+</body>
+</html>
